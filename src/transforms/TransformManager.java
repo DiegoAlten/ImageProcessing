@@ -44,6 +44,41 @@ public class TransformManager {
         return translatedImage;
     }
 
+	public static BufferedImage scale(BufferedImage image) {
+    	
+    	/*
+    	 * [x']   x  0  0   [x]
+    	 * [y'] = 0  y  0   [y]
+    	 * [1 ]   0  0  1   [1]
+    	*/
+    	int imgWidth  = image.getWidth();
+        int imgHeight = image.getHeight();
+        
+        BufferedImage translatedImage = new BufferedImage(imgWidth, imgHeight, image.getType());
+        
+    	double scale = Double.parseDouble(JOptionPane.showInputDialog(null,"Informe o valor da escala"));
+
+        double[][] matrizScaled = {  { scale, 0,     0 },
+                                     { 0,     scale, 0 },
+                                     { 0,     0,     1 } };
+        
+        for (int y = 0; y < imgHeight; y++) {
+            for (int x = 0; x < imgWidth; x++) {
+            	
+                int newX = (int) Math.round(x * matrizScaled[0][0] + y * matrizScaled[0][1] + matrizScaled[0][2]);
+                int newY = (int) Math.round(x * matrizScaled[1][0] + y * matrizScaled[1][1] + matrizScaled[1][2]);
+
+                // Verifica se a nova posição está dentro dos limites da imagem
+                if (newX >= 0 && newX < imgWidth && newY >= 0 && newY < imgHeight) {
+                    translatedImage.setRGB(newX, newY, image.getRGB(x, y));
+                }
+                
+            }
+        }
+        
+        return translatedImage;
+    }
+
     public static BufferedImage rotate(BufferedImage image, double angle) {
     	
     	/*
@@ -106,5 +141,7 @@ public class TransformManager {
         
         return imgMirrored;
     }
+    
+    
     
 }
