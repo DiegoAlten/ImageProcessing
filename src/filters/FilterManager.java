@@ -62,4 +62,38 @@ public class FilterManager {
         return Math.max(0, Math.min(255, valor));
     }
     
+    public static BufferedImage passFilter(BufferedImage image, float[][] mascara) {
+    	
+    	int imgWidth  = image.getWidth();
+        int imgHeight = image.getHeight();
+        
+        BufferedImage imgPass = new BufferedImage(imgWidth, imgHeight, BufferedImage.TYPE_INT_ARGB);
+        
+        for (int y = 1; y < imgHeight - 1; y++){
+            for(int x = 1; x < imgWidth - 1; x++){
+            	
+                int r = 0;
+                int g = 0;
+                int b = 0;
+
+                for(int i = 0; i < 3; i++){
+                    for(int j = 0; j < 3; j++){
+
+                        r += (image.getRGB(x + (i-1),y + (j-1)) >> 16) & 0xFF;
+                        g += (image.getRGB(x + (i-1),y + (j-1)) >>  8) & 0xFF;
+                        b += (image.getRGB(x + (i-1),y + (j-1)) >>  0) & 0xFF;
+                    }
+                }
+
+                r = r/9;
+                g = g/9;
+                b = b/9;
+
+                imgPass.setRGB(x, y, new Color(r,g,b).getRGB());
+            }
+        }
+        
+        return imgPass;
+    }
+    
 }

@@ -87,6 +87,8 @@ public class ImageProcessingApp {
         grayscaleItem.addActionListener(e -> applyGrayscale()); 
         brightnessItem.addActionListener(e -> applyBrightnessContrast(Integer.parseInt(JOptionPane.showInputDialog(null,"Informe o brilho")),1)); 
         contrastItem.addActionListener(e -> applyBrightnessContrast(0,Integer.parseInt(JOptionPane.showInputDialog(null,"Informe o constraste")))); 
+        passaBaixaItem.addActionListener(e -> applyLowPass());
+        passaAltaItem.addActionListener(e -> applyHighPass());
         
         // Menu Morfologia Matemática
         /*JMenu morphologyMenu = new JMenu("Morfologia Matemática");
@@ -203,6 +205,39 @@ public class ImageProcessingApp {
         }
     	
     	transformedImage = TransformManager.mirror(originalImage);
+        transformedImageLabel.setIcon(new ImageIcon(transformedImage)); // Atualizando a tela
+    }
+    
+    private void applyLowPass() {
+    	if (originalImage == null) {
+            JOptionPane.showMessageDialog(frame, "Abra uma imagem primeiro!", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+    	
+    	float[][] lowPassKernel = {
+		    {1f/9, 1f/9, 1f/9},
+		    {1f/9, 1f/9, 1f/9},
+		    {1f/9, 1f/9, 1f/9}
+		};
+    	
+    	transformedImage = FilterManager.passFilter(transformedImage, lowPassKernel);
+        transformedImageLabel.setIcon(new ImageIcon(transformedImage)); // Atualizando a tela
+    }
+    
+    private void applyHighPass() {
+    	if (originalImage == null) {
+            JOptionPane.showMessageDialog(frame, "Abra uma imagem primeiro!", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+    	
+    	// Kernel 3x3 passa-alto
+    	float[][] highPassKernel = {
+    	    {-1, -1, -1},
+    	    {-1,  8, -1},
+    	    {-1, -1, -1}
+    	};
+
+    	transformedImage = FilterManager.passFilter(transformedImage, highPassKernel);
         transformedImageLabel.setIcon(new ImageIcon(transformedImage)); // Atualizando a tela
     }
     
